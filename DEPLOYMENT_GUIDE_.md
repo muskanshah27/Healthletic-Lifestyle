@@ -171,3 +171,4 @@ mu image build at docker hub
 
 
 my pods running and after portforwarding that screen =shot is already atached above
+thanks
