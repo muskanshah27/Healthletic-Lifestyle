@@ -46,10 +46,20 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
+          echo "Starting Helm Deployment..."
+          set -e
+
+          # Trigger Helm deployment (no waiting)
           helm upgrade --install healthletic-backend chart/ \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/healthletic-backend \
-            --set image.tag=${{ needs.build.outputs.tag }} \
-            --wait
+            --set image.tag=${{ needs.build.outputs.tag }}
+
+          echo "Helm deployment triggered. Waiting for rollout..."
+
+          # This waits for the deployment until pods are ready
+          kubectl rollout status deployment/healthletic-backend --timeout=300s
+
+          echo "Deployment Successful 🎉"
 
       - name: Verify Deployment
         run: |
